@@ -121,6 +121,10 @@ app_license = "MIT"
 doc_events = {
 	"Purchase Order": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
+	},
+
+    "Sales Invoice": {
+		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
 	}
 }
 
