@@ -121,8 +121,20 @@ app_license = "MIT"
 doc_events = {
 	"Purchase Order": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
+        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
+	},
+    
+	('Stock Entry','Stock Reconciliation','Stock Ledger Entry','Material Request','Quotation','Journal Entry','Payment Entry'):{
+        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.naming_series"
+
+	},
+    ('Purchase Invoice','Purchase Receipt','Delivery Note','Sales Order'):{
+		"autoname":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
+	},
+    'Sales Invoice':{
+        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
+	},
 	}
-}
 
 # Scheduled Tasks
 # ---------------
