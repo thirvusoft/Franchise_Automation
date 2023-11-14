@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include franchise_automation *.css
+recursive-include franchise_automation *.csv
+recursive-include franchise_automation *.html
+recursive-include franchise_automation *.ico
+recursive-include franchise_automation *.js
+recursive-include franchise_automation *.json
+recursive-include franchise_automation *.md
+recursive-include franchise_automation *.png
+recursive-include franchise_automation *.py
+recursive-include franchise_automation *.svg
+recursive-include franchise_automation *.txt
+recursive-exclude franchise_automation *.pyc
