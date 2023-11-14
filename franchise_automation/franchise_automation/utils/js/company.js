@@ -30,7 +30,7 @@ frappe.ui.form.on('Company', {
 		}
 		frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.update_item_tax_table',
-			freeze: true,
+			// freeze: true,
 			args: {
 				'doc': frm.doc.name
 			},

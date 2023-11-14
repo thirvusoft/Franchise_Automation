@@ -14,7 +14,7 @@ def company_custom_fields():
     custom_fields = {
         "Company": [
             dict(fieldname='franchise_automation', label='Franchise Automation',
-                fieldtype='Tab Break',insert_after='registration_details',depends_on='eval:!doc.__islocal'),
+                fieldtype='Tab Break',insert_after='registration_details',depends_on='eval:!doc.__islocal && doc.parent_company'),
             dict(fieldname='create_customer_supplier', label='➛ Create Customer & Supplier',
                 fieldtype='Button',insert_after='franchise_automation'),
             dict(fieldname='update_item_tax_table', label='➛ Update Item Tax Table',
@@ -63,26 +63,26 @@ def create_mode(doc):
 @frappe.whitelist()
 def update_item_tax_table(doc):
     doc = frappe.get_doc('Company',doc)
-    hsn_list = frappe.get_all("GST HSN Code",{'name':'82081000'},pluck='name')
+    hsn_list = frappe.get_all("GST HSN Code",pluck='name')
     for hs in hsn_list:
         hs_doc = frappe.get_doc('GST HSN Code',hs)
         if hs_doc.custom_tax_percentage:
             tax_template = f'GST {int(hs_doc.custom_tax_percentage)}% - {doc.abbr}'
             item_list = frappe.get_all('Item',{'gst_hsn_code':hs},pluck='name')
             for item in item_list:
-                item_doc = frappe.get_doc('Item',item)
-                if not (frappe.db.exists('Item Tax',{'item_tax_template':tax_template,'tax_category':'In-State'})):
+                item_doc = frappe.get_doc('Item',item)  
+                if not (frappe.db.exists('Item Tax',{'item_tax_template':tax_template,'tax_category':'In-State','parent':item_doc.name})):
                     item_doc.append('taxes',{
                         'item_tax_template':tax_template,
                         'tax_category':'In-State'
                     })
-                if not (frappe.db.exists('Item Tax',{'item_tax_template':tax_template,'tax_category':'Out-State'})):
+                if not (frappe.db.exists('Item Tax',{'item_tax_template':tax_template,'tax_category':'Out-State','parent':item_doc.name})):
                     item_doc.append('taxes',{
                         'item_tax_template':tax_template,
                         'tax_category':'Out-State'
                     })
                 item_doc.save()
-
+    
     return 1
 
 @frappe.whitelist()
@@ -114,6 +114,9 @@ def update_supplier(doc):
         new_sup.supplier_type = 'Company'
         new_sup.is_internal_supplier = 1
         new_sup.represents_company = doc.name
+        new_sup.append('companies',{
+            'company':doc.parent_company
+        })
         new_sup.save()
 
     # Create Customer
@@ -124,6 +127,9 @@ def update_supplier(doc):
         new_cus.customer_name = doc.name
         new_cus.is_internal_customer = 1
         new_cus.represents_company = doc.name
+        new_cus.append('companies',{
+            'company':doc.parent_company
+        })
         new_cus.save()
 
     return 1
