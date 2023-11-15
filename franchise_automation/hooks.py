@@ -29,7 +29,8 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Purchase Invoice" : "franchise_automation/utils/js/purchase_invoice.js",
+"Company" : "franchise_automation/utils/js/company.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -66,11 +67,12 @@ app_license = "MIT"
 # before_install = "franchise_automation.install.before_install"
 # after_install = "franchise_automation.install.after_install"
 
+after_migrate = "franchise_automation.install.after_migrate"
 # Uninstallation
 # ------------
 
 # before_uninstall = "franchise_automation.uninstall.before_uninstall"
-after_migrate = "franchise_automation.franchise_automation.utils.py.custom_field.custom_naming"
+after_install = "franchise_automation.franchise_automation.utils.py.custom_field.custom_naming"
 
 
 # Integration Setup
@@ -124,14 +126,19 @@ doc_events = {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
-	('Stock Entry','Stock Reconciliation','Material Request','Quotation','Journal Entry','Payment Entry'):{
+  ('Stock Entry','Stock Reconciliation','Material Request','Quotation','Journal Entry','Payment Entry'):{
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_series"
 
 	},
     ('Purchase Invoice','Purchase Receipt','Delivery Note','Sales Order'):{
 		"before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
-    "Sales Invoice": {
+
+	'Company':{
+		"validate": "franchise_automation.franchise_automation.utils.py.company.create_supp_cust",
+		'after_insert': "franchise_automation.franchise_automation.utils.py.company.create_supp_cust"
+  },
+  "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
 	},
