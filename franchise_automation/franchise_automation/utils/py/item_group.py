@@ -1,5 +1,6 @@
 import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 
 def item_group_customisation():
     custom_field={
@@ -17,13 +18,6 @@ def item_group_customisation():
                 insert_after = "column_break_1",
                 
             ),
-
-            #  dict(
-            #     fieldtype = "Column Break",
-            #     fieldname= "column_break_2",
-            #     insert_after = "show_franchise",
-                
-            # ),
              dict(
                 fieldname = "restrict_franchise",
                 fieldtype = "Check",
@@ -39,11 +33,8 @@ def item_group_customisation():
                 label = "Show to franchise",
                 insert_after = "disabled",
                 fetch_from = "item_group.show_franchise",
-                fetch_if_empty=1,
-                
-            ),
-
-            
+                fetch_if_empty=1,                
+            ),            
              dict(
                 fieldname = "restrict_franchise_item",
                 fieldtype = "Check",
@@ -61,7 +52,19 @@ def item_group_customisation():
                 insert_after = "stock_uom",
                 hidden=1            
                 
+            ),
+            dict(
+                fieldname = "company_is_group",
+                fieldtype = "Check",
+                label = "is_group",
+                insert_after = "company",
+                fetch_from = "company.is_group",
+                hidden=1  
+                
             )
         ]
     }   
     create_custom_fields(custom_field)
+
+def property_setter():
+    make_property_setter("Item", "serial_nos_and_batches", "depends_on", "eval:doc.is_stock_item && doc.is_group", "Data")
