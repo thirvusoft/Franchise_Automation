@@ -66,6 +66,7 @@ app_license = "MIT"
 # before_install = "franchise_automation.install.before_install"
 # after_install = "franchise_automation.install.after_install"
 
+after_migrate = "franchise_automation.install.after_migrate"
 # Uninstallation
 # ------------
 
