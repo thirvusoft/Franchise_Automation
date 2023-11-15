@@ -70,7 +70,8 @@ app_license = "MIT"
 # ------------
 
 # before_uninstall = "franchise_automation.uninstall.before_uninstall"
-# after_uninstall = "franchise_automation.uninstall.after_uninstall"
+after_migrate = "franchise_automation.franchise_automation.utils.py.custom_field.custom_naming"
+
 
 # Integration Setup
 # ------------------
@@ -121,20 +122,18 @@ app_license = "MIT"
 doc_events = {
 	"Purchase Order": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
-        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
+        "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
-    
 	('Stock Entry','Stock Reconciliation','Stock Ledger Entry','Material Request','Quotation','Journal Entry','Payment Entry'):{
-        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.naming_series"
+        "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_series"
 
 	},
     ('Purchase Invoice','Purchase Receipt','Delivery Note','Sales Order'):{
-		"autoname":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
+		"before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
     "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
-        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
-
+        "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
 	}
 }
 

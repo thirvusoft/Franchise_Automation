@@ -17,7 +17,8 @@ def set_document_name(doc):
     abb = frappe.db.get_value('Company', doc.company, 'abbr')
     doctype = frappe.get_value('DocType', doc.doctype, 'name')
     prefix = doctype_prefix_mapping.get(doctype, '')
-    doc.name = parse_naming_series(f"{abb}-{prefix}-.###")
+    doc.custom_naming_series = (f"{abb}-{prefix}")
+
 
 def naming_series(doc, action):
     set_document_name(doc)
@@ -25,7 +26,6 @@ def naming_series(doc, action):
 
 
 def get_fiscal_year_short_form():
-
     a=[]
     fy =  frappe.db.get_single_value('Global Defaults', 'current_fiscal_year')    
     fy1 =  frappe.db.get_single_value('Global Defaults', 'current_fiscal_year') 
@@ -38,13 +38,11 @@ def get_fiscal_year_short_form():
 def naming_sales_invoice(doc, action):    
     a = get_fiscal_year_short_form()
     abb = frappe.db.get_value('Company', doc.company, 'abbr')
-
-    if not doc.is_return:
-        doc.name = parse_naming_series(f"{abb}{a[0]}{a[1]}-.###")
+    doc.custom_naming_series = f"{abb}{a[0]}{a[1]}"
+    if doc.is_return:
+        doc.naming_series= "{custom_naming_series}.-.###.-R"
     else:
-        doc.name = parse_naming_series(f"{abb}{a[0]}{a[1]}-.###.-R")
-
-
+        doc.naming_series= "{custom_naming_series}.-.###"
 
 
 doctype_prefix_mapping_return = {
@@ -60,8 +58,8 @@ def set_purchase_name(doc,event):
     abb = frappe.db.get_value('Company', doc.company, 'abbr')
     doctype = frappe.get_value('DocType', doc.doctype, 'name')
     prefix = doctype_prefix_mapping_return.get(doctype, '')
-    if not doc.get('is_return'):
-        doc.name = parse_naming_series(f"{abb}{a[0]}{a[1]}{prefix}-.###")
+    doc.custom_naming_series = f"{abb}{a[0]}{a[1]}{prefix}"
+    if doc.get('is_return'):
+        doc.naming_series= "{custom_naming_series}.-.###.-R"
     else:
-        doc.name = parse_naming_series(f"{abb}{a[0]}{a[1]}{prefix}-.###.-R")
-
+        doc.naming_series= "{custom_naming_series}.-.###"
