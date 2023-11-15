@@ -122,6 +122,10 @@ after_migrate = "franchise_automation.install.after_migrate"
 doc_events = {
 	"Purchase Order": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
+	},
+	'Company':{
+		"validate": "franchise_automation.franchise_automation.utils.py.company.create_supp_cust",
+		'after_insert': "franchise_automation.franchise_automation.utils.py.company.create_supp_cust"
 	}
 }
 

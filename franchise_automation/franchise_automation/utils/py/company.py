@@ -15,7 +15,7 @@ def company_custom_fields():
         "Company": [
             dict(fieldname='franchise_automation', label='Franchise Automation',
                 fieldtype='Tab Break',insert_after='registration_details',depends_on='eval:!doc.__islocal && doc.parent_company'),
-            dict(fieldname='create_customer_supplier', label='➛ Create Customer & Supplier',
+            dict(fieldname='create_customer_supplier', label='➛ Create Customer',
                 fieldtype='Button',insert_after='franchise_automation'),
             dict(fieldname='update_item_tax_table', label='➛ Update Item Tax Table',
                 fieldtype='Button',insert_after='create_customer_supplier'),
@@ -38,6 +38,31 @@ def validate_parent(doc):
         if len(parent) > 1:
             frappe.throw('Only one parent company should be created')
 
+def create_supp_cust(doc,event):
+    if doc.is_group and not doc.get('__islocal'):
+        if not frappe.db.exists('Supplier Group','Parent Supplier'):
+            new = frappe.new_doc('Supplier Group')
+            new.supplier_group_name = 'Parent Supplier'
+            new.save()
+
+        if not frappe.db.exists('Supplier',doc.name):
+            new_sup = frappe.new_doc('Supplier')
+            new_sup.supplier_name = doc.name
+            new_sup.supplier_group = 'Parent Supplier'
+            new_sup.supplier_type = 'Company'
+            new_sup.is_internal_supplier = 1
+            new_sup.represents_company = doc.name
+            new_sup.save()
+
+    elif doc.parent_company and not doc.get('__islocal'):
+        parent = frappe.get_value('Company',{'company_type':'Parent','name':doc.parent_company},'name')
+        if frappe.db.exists('Supplier',parent):
+            supp = frappe.get_doc('Supplier',parent)
+            if not (frappe.db.exists('Allowed To Transact With',{'company':doc.name,'parent':supp.name})):
+                supp.append('companies',{
+                    'company':doc.name
+                })
+                supp.save()
 
 @frappe.whitelist()
 def create_mode(doc):
@@ -87,37 +112,12 @@ def update_item_tax_table(doc):
 
 @frappe.whitelist()
 def update_supplier(doc):
+
     doc = frappe.get_doc('Company',doc)
-    parent = frappe.get_value('Company',{'company_type':'Parent'},'name')
-    supp = frappe.get_doc('Supplier',parent)
-    supp.append('companies',{
-        'company':doc.name
-    })
-    supp.save()
-
-
-    if not frappe.db.exists('Supplier Group','Franchise Supplier'):
-        new = frappe.new_doc('Supplier Group')
-        new.supplier_group_name = 'Franchise Supplier'
-        new.save()
-
     if not frappe.db.exists('Customer Group','Franchise Customer'):
         new = frappe.new_doc('Customer Group')
         new.customer_group_name = 'Franchise Customer'
         new.save()
-
-    # Create Supplier
-    if not frappe.db.exists('Supplier',doc.name):
-        new_sup = frappe.new_doc('Supplier')
-        new_sup.supplier_name = doc.name
-        new_sup.supplier_group = 'Franchise Supplier'
-        new_sup.supplier_type = 'Company'
-        new_sup.is_internal_supplier = 1
-        new_sup.represents_company = doc.name
-        new_sup.append('companies',{
-            'company':doc.parent_company
-        })
-        new_sup.save()
 
     # Create Customer
     if not frappe.db.exists('Customer',{'customer_name':doc.name}):

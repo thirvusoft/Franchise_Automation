@@ -28,6 +28,7 @@ frappe.ui.form.on('Company', {
 		if(await frm.is_dirty()){
 			frm.save()
 		}
+		frappe.show_alert({ message: __('Started Updating ..'), indicator: 'yellow' });
 		frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.update_item_tax_table',
 			// freeze: true,
