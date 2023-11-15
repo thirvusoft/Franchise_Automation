@@ -29,7 +29,8 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Purchase Invoice" : "franchise_automation/utils/js/purchase_invoice.js"}
+doctype_js = {"Purchase Invoice" : "franchise_automation/utils/js/purchase_invoice.js",
+"Company" : "franchise_automation/utils/js/company.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -66,6 +67,7 @@ doctype_js = {"Purchase Invoice" : "franchise_automation/utils/js/purchase_invoi
 # before_install = "franchise_automation.install.before_install"
 # after_install = "franchise_automation.install.after_install"
 
+after_migrate = "franchise_automation.install.after_migrate"
 # Uninstallation
 # ------------
 
@@ -123,7 +125,10 @@ doc_events = {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
         "on_cancel": "franchise_automation.franchise_automation.utils.py.purchase_order.on_cancel"
 	},
-
+	'Company':{
+		"validate": "franchise_automation.franchise_automation.utils.py.company.create_supp_cust",
+		'after_insert': "franchise_automation.franchise_automation.utils.py.company.create_supp_cust"
+  },
     "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
         "on_cancel": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_cancel"
