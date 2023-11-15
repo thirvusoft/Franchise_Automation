@@ -121,10 +121,12 @@ doctype_js = {"Purchase Invoice" : "franchise_automation/utils/js/purchase_invoi
 doc_events = {
 	"Purchase Order": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
+        "on_cancel": "franchise_automation.franchise_automation.utils.py.purchase_order.on_cancel"
 	},
 
     "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
+        "on_cancel": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_cancel"
 	}
 }
 
