@@ -168,3 +168,4 @@ def update_user(i,doc):
             'new_password':i.get_password(fieldname="pswd")
         })
         user.save()
+
