@@ -124,7 +124,7 @@ doc_events = {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
-	('Stock Entry','Stock Reconciliation','Stock Ledger Entry','Material Request','Quotation','Journal Entry','Payment Entry'):{
+	('Stock Entry','Stock Reconciliation','Material Request','Quotation','Journal Entry','Payment Entry'):{
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_series"
 
 	},
@@ -134,6 +134,10 @@ doc_events = {
     "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
+	},
+    "Stock Ledger Entry":{
+        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.stock_ledger_entry"
+
 	}
 }
 

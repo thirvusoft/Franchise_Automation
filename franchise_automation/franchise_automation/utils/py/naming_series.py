@@ -6,7 +6,6 @@ from erpnext.accounts.utils import get_fiscal_year
 doctype_prefix_mapping = {
     'Stock Entry': 'STE',
     'Stock Reconciliation': 'RECO',
-    'Stock Ledger Entry': 'SLE',
     'Material Request':'MR',
     'Quotation':'QUOT',
     'Journal Entry':'JE',
@@ -23,6 +22,11 @@ def set_document_name(doc):
 def naming_series(doc, action):
     set_document_name(doc)
 
+
+def stock_ledger_entry(doc,event):
+    abb = frappe.db.get_value('Company', doc.company, 'abbr')
+    prefix = 'SLE'
+    doc.name = parse_naming_series(f"{abb}-{prefix}-.###")
 
 
 def get_fiscal_year_short_form():

@@ -29,24 +29,6 @@ def custom_field_list():
                 
             ),
         ],
-        "Stock Ledger Entry":[
-             dict(
-                fieldname = "custom_naming_series",
-                fieldtype = "Data",
-                label = "Naming Series",
-                insert_after = "naming_series",
-                hidden=1
-            ),
-            dict(
-                fieldname = "naming_series",
-                fieldtype = "Select",
-                options = '{custom_naming_series}.-.###',
-                label = "Naming Series",
-                insert_after = "item_code",
-                hidden=1,
-                default='{custom_naming_series}.-.###'
-            ),
-        ],
           "Material Request":[
              dict(
                 fieldname = "custom_naming_series",
@@ -157,11 +139,6 @@ def property_setter():
 
     make_property_setter('Stock Reconciliation', "naming_series", "options", '''{custom_naming_series}.-.###''', "Small Text")
     make_property_setter('Stock Reconciliation', "naming_series", "default", '''{custom_naming_series}.-.###''', "Small Text")
-
-    make_property_setter('Stock Ledger Entry', "naming_series", "options", '''{custom_naming_series}.-.###''', "Small Text")
-    make_property_setter('Stock Ledger Entry', "naming_series", "default", '''{custom_naming_series}.-.###''', "Small Text")
-    make_property_setter('Stock Ledger Entry',"","autoname", 'field:custom_naming_series', "Data",for_doctype=True)
-    make_property_setter('Stock Ledger Entry',"","naming_rule", 'By "Naming Series" field', "Data",for_doctype=True)
 
 
     make_property_setter('Material Request', "naming_series", "options", '''{custom_naming_series}.-.###''', "Small Text")
