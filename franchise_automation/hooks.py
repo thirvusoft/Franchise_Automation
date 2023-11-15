@@ -127,9 +127,15 @@ doc_events = {
 	'Company':{
 		"validate": "franchise_automation.franchise_automation.utils.py.company.create_supp_cust",
 		'after_insert': "franchise_automation.franchise_automation.utils.py.company.create_supp_cust"
-  },
+  	},
     "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
+	},
+    "Item Group": {
+        "validate": "franchise_automation.franchise_automation.utils.py.item.update_company_in_item_from_item_group"
+	},
+    "Item": {
+        "validate": "franchise_automation.franchise_automation.utils.py.item.validate_company_in_item"
 	}
 }
 
