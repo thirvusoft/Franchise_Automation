@@ -124,13 +124,15 @@ after_install = "franchise_automation.franchise_automation.utils.py.custom_field
 doc_events = {
 	"Purchase Order": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.purchase_order.on_submit",
-        "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
+    "on_cancel": "franchise_automation.franchise_automation.utils.py.purchase_order.on_cancel",
+    "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
-  ('Stock Entry','Stock Reconciliation','Material Request','Quotation','Journal Entry','Payment Entry'):{
+  
+  ('Stock Entry','Stock Reconciliation','Material Request','Quotation','Journal Entry','Payment Entry'): {
         "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_series"
 
 	},
-    ('Purchase Invoice','Purchase Receipt','Delivery Note','Sales Order'):{
+    ('Purchase Invoice','Purchase Receipt','Delivery Note','Sales Order'): {
 		"before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.set_purchase_name"
 	},
 
@@ -138,13 +140,15 @@ doc_events = {
 		"validate": "franchise_automation.franchise_automation.utils.py.company.create_supp_cust",
 		'after_insert': "franchise_automation.franchise_automation.utils.py.company.create_supp_cust"
   },
+  
   "Sales Invoice": {
 		"on_submit": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_submit",
-        "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
+    "on_cancel": "franchise_automation.franchise_automation.utils.py.sales_invoice.on_cancel",
+    "before_naming":"franchise_automation.franchise_automation.utils.py.naming_series.naming_sales_invoice"
 	},
-    "Stock Ledger Entry":{
-        "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.stock_ledger_entry"
-
+  
+  "Stock Ledger Entry": {
+     "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.stock_ledger_entry"
 	}
 }
 

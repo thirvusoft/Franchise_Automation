@@ -5,6 +5,10 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_inter_comp
 def on_submit(self, event):
 
 	create_sales_order(self)
+	  
+def on_cancel(self, event):
+
+	cancel_inter_company_so(self)
 
 def create_sales_order(self):
 
@@ -15,3 +19,13 @@ def create_sales_order(self):
 		new_doc.delivery_date = self.schedule_date
 
 		new_doc.save()
+
+def cancel_inter_company_so(self):
+	
+	if frappe.db.exists("Sales Order", {"inter_company_order_reference": self.name}):
+						
+		doc = frappe.get_doc("Sales Order", {"inter_company_order_reference": self.name})
+
+		if doc.docstatus == 0:
+
+			frappe.delete_doc("Sales Order", doc.name, ignore_permissions = True)
