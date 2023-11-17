@@ -127,6 +127,8 @@ def update_supplier(doc):
         new_cus.customer_name = doc.name
         new_cus.is_internal_customer = 1
         new_cus.represents_company = doc.name
+        new_cus.gstin = doc.gstin
+        new_cus.gst_category = "Registered Regular" if doc.gstin else "Unregistered"
         new_cus.append('companies',{
             'company':doc.parent_company
         })
