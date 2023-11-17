@@ -10,9 +10,9 @@ frappe.ui.form.on('Company', {
     },
 	update_mode_of_payment:async function(frm){
 		if(await frm.is_dirty()){
-			frm.save()
+			await frm.save()
 		}
-		frappe.call({
+		await frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.create_mode',
 			freeze: true,
 			args: {
@@ -26,10 +26,10 @@ frappe.ui.form.on('Company', {
 	},
 	update_item_tax_table:async function(frm){
 		if(await frm.is_dirty()){
-			frm.save()
+			await frm.save()
 		}
 		frappe.show_alert({ message: __('Started Updating ..'), indicator: 'yellow' });
-		frappe.call({
+		await frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.update_item_tax_table',
 			// freeze: true,
 			args: {
@@ -43,9 +43,9 @@ frappe.ui.form.on('Company', {
 	},
 	create_customer_supplier:async function(frm){
 		if(await frm.is_dirty()){
-			frm.save()
+			await frm.save()
 		}
-		frappe.call({
+		await frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.update_supplier',
 			freeze: true,
 			args: {
@@ -59,9 +59,9 @@ frappe.ui.form.on('Company', {
 	},
 	create_users:async function(frm){
 		if(await frm.is_dirty()){
-			frm.save()
+			await frm.save()
 		}
-		frappe.call({
+		await frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.create_user',
 			freeze: true,
 			args: {
@@ -77,7 +77,7 @@ frappe.ui.form.on('Company', {
 frappe.ui.form.on('Company Users',{
 	'create':async function(frm,cdt,cdn){
 		if(await frm.is_dirty()){
-			frm.save()
+			await frm.save()
 		}
 		let row = locals[cdt][cdn]
 		await frappe.call({
