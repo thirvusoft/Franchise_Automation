@@ -160,6 +160,12 @@ def update_user(i,doc):
         user.enabled = i.enable
         user.new_password = i.get_password(fieldname="pswd")
         user.save()
+        user_permission=frappe.new_doc("User Permission")
+        user_permission.user=user.name
+        user_permission.allow="Company"
+        user_permission.for_value=doc.name
+        user_permission.apply_to_all_doctypes=1
+        user_permission.save(ignore_permissions=True)
     else:
         user = frappe.get_doc('User',{'email':i.email_id})
         user.update({
