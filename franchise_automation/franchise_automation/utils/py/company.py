@@ -18,7 +18,7 @@ def company_custom_fields():
             dict(fieldname='create_customer_supplier', label='➛ Create Customer',
                 fieldtype='Button',insert_after='franchise_automation'),
             dict(fieldname='update_item_tax_table', label='➛ Update Item Tax Table',
-                fieldtype='Button',insert_after='create_customer_supplier'),
+                fieldtype='Button',insert_after='create_customer_supplier',hidden=1),
             dict(fieldname='update_mode_of_payment', label='➛ Update Mode of Payment',
                 fieldtype='Button',insert_after='update_item_tax_table'),
             dict(fieldname='mode_of_payment', label='Mode of Payment',
