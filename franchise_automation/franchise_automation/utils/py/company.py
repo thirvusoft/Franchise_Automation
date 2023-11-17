@@ -171,3 +171,11 @@ def update_user(i,doc):
         })
         user.save()
 
+def delete_item_tax_template(doc,event):
+    templates = frappe.db.get_all('Item Tax Template')
+    template = f' - {doc.abbr}'
+
+
+    for i in frappe.get_all('Item Tax',{'item_tax_template':['like',f'%{template}']},pluck='name'):
+        frappe.delete_doc('Item Tax',i)
+        frappe.db.commit()
