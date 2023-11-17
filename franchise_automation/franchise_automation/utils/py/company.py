@@ -172,7 +172,6 @@ def update_user(i,doc):
         user.save()
 
 def delete_item_tax_template(doc,event):
-    templates = frappe.db.get_all('Item Tax Template')
     template = f' - {doc.abbr}'
 
 
