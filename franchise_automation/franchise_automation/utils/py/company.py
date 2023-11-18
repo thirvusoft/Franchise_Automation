@@ -23,8 +23,12 @@ def company_custom_fields():
                 fieldtype='Button',insert_after='update_item_tax_table'),
             dict(fieldname='mode_of_payment', label='Mode of Payment',
                 fieldtype='Table',insert_after='update_mode_of_payment',options='Company Mode of Payment'),
+            dict(fieldname='pos_user', label='POS User',
+                fieldtype='Check',insert_after='mode_of_payment'),
+            dict(fieldname='create_pos', label='➛ Create POS',
+                fieldtype='Button',insert_after='pos_user',depends_on='eval:doc.pos_user'),
             dict(fieldname='create_users', label='➛ Create Users',
-                fieldtype='Button',insert_after='mode_of_payment'),
+                fieldtype='Button',insert_after='create_pos'),
             dict(fieldname='user_table', label='User Table',
                 fieldtype='Table',options='Company Users',insert_after='create_user'),
             ],
@@ -63,6 +67,26 @@ def create_supp_cust(doc,event):
                     'company':doc.name
                 })
                 supp.save()
+
+@frappe.whitelist()
+def create_pos(doc):
+    doc = frappe.get_doc('Company',doc)
+    if not frappe.db.exists('POS Profile',doc.name):
+        pos = frappe.new_doc('POS Profile')
+        pos.company = doc.name
+        pos.__newname = doc.name
+        pos.write_off_cost_center = f'Main - {doc.abbr}'
+        pos.write_off_account = f'Write Off - {doc.abbr}'
+        pos.warehouse = f'Stores - {doc.abbr}'
+        pos.append('payments',{
+            'mode_of_payment':"Cash",
+            'default':1
+        })
+        pos.flags.ignore_mandatory = True
+        pos.save()
+        return 1
+    else:
+        return 0
 
 @frappe.whitelist()
 def create_mode(doc):

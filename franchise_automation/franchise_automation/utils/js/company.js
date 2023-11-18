@@ -53,6 +53,28 @@ frappe.ui.form.on('Company', {
 			}
 		})
 	},
+	create_pos:async function(frm){
+		if(await frm.is_dirty()){
+			await frm.save()
+		}
+		await frappe.call({
+			method: 'franchise_automation.franchise_automation.utils.py.company.create_pos',
+			freeze: true,
+			args: {
+				'doc': frm.doc.name
+			},
+			callback: function(r) {
+				if(r.message == 1){
+					frappe.show_alert({ message: __('Created Successfully'), indicator: 'green' });
+
+				}
+				else{
+					frappe.show_alert({ message: __('Already Created ..!'), indicator: 'green' });
+
+				}
+			}
+		})
+	},
 	create_customer_supplier:async function(frm){
 		if(await frm.is_dirty()){
 			await frm.save()
