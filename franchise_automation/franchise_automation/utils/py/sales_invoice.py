@@ -12,7 +12,7 @@ def on_cancel(self, event):
 
 def create_purchase_invoice(self):
 
-    if frappe.get_value("Company", {"name": self.company}, "is_group"):
+    if frappe.get_value("Company", {"name": self.company}, "is_group") and frappe.get_value("Customer", {"name": self.customer}, "is_internal_customer") :
 
         new_doc = make_inter_company_transaction("Sales Invoice", source_name = self.name, target_doc = None)
 
