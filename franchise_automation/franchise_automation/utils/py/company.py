@@ -18,7 +18,7 @@ def company_custom_fields():
             dict(fieldname='create_customer_supplier', label='➛ Create Customer',
                 fieldtype='Button',insert_after='franchise_automation'),
             dict(fieldname='update_item_tax_table', label='➛ Update Item Tax Table',
-                fieldtype='Button',insert_after='create_customer_supplier'),
+                fieldtype='Button',insert_after='create_customer_supplier',hidden=1),
             dict(fieldname='update_mode_of_payment', label='➛ Update Mode of Payment',
                 fieldtype='Button',insert_after='update_item_tax_table'),
             dict(fieldname='mode_of_payment', label='Mode of Payment',
@@ -133,6 +133,33 @@ def update_supplier(doc):
             'company':doc.parent_company
         })
         new_cus.save()
+        address=frappe.get_all(
+            "Address",
+            filters=[
+            ["Dynamic Link", "link_doctype", "=", 'Company'],
+            ["Dynamic Link", "link_name", "=", doc.name],
+            ["disabled", "=", 0],
+            ],
+            pluck="name",
+            limit=1,
+        )
+        contact=frappe.get_all(
+            "Contact",
+            filters=[
+            ["Dynamic Link", "link_doctype", "=", 'Company'],
+            ["Dynamic Link", "link_name", "=", doc.name],
+            ],
+            pluck="name",
+            limit=1,
+        )
+        if address:
+            new_cus.customer_primary_address = address[0]
+
+        if contact:
+            new_cus.customer_primary_contact =contact[0]
+
+        new_cus.save()
+
 
     return 1
 
@@ -177,3 +204,10 @@ def update_user(i,doc):
         })
         user.save()
 
+def delete_item_tax_template(doc,event):
+    template = f' - {doc.abbr}'
+
+
+    for i in frappe.get_all('Item Tax',{'item_tax_template':['like',f'%{template}']},pluck='name'):
+        frappe.delete_doc('Item Tax',i)
+        frappe.db.commit()
