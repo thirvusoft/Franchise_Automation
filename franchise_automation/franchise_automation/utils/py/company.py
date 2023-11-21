@@ -157,6 +157,33 @@ def update_supplier(doc):
             'company':doc.parent_company
         })
         new_cus.save()
+        address=frappe.get_all(
+            "Address",
+            filters=[
+            ["Dynamic Link", "link_doctype", "=", 'Company'],
+            ["Dynamic Link", "link_name", "=", doc.name],
+            ["disabled", "=", 0],
+            ],
+            pluck="name",
+            limit=1,
+        )
+        contact=frappe.get_all(
+            "Contact",
+            filters=[
+            ["Dynamic Link", "link_doctype", "=", 'Company'],
+            ["Dynamic Link", "link_name", "=", doc.name],
+            ],
+            pluck="name",
+            limit=1,
+        )
+        if address:
+            new_cus.customer_primary_address = address[0]
+
+        if contact:
+            new_cus.customer_primary_contact =contact[0]
+
+        new_cus.save()
+
 
     return 1
 
