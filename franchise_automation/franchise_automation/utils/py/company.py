@@ -71,7 +71,7 @@ def create_mode(doc):
     if doc.parent_company:
         list_doc = frappe.get_all("Mode of Payment Account",{'company':doc.name},pluck='name')
         for j in list_doc:
-            frappe.delete_doc('Mode of Payment Account',j)
+            frappe.delete_doc('Mode of Payment Account',j,ignore_permissions=True)
             frappe.db.commit()
         for i in doc.mode_of_payment:
             if i.account and i.mode_of_payment and not frappe.db.exists('Mode of Payment Account',{'parent':i.mode_of_payment,'company':doc.name,'default_account':i.account}):

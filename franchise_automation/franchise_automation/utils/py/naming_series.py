@@ -39,7 +39,7 @@ def get_fiscal_year_short_form():
     return a
 
 
-def naming_sales_invoice(doc, action):    
+def naming_sales_invoice(doc, action):  
     a = get_fiscal_year_short_form()
     abb = frappe.db.get_value('Company', doc.company, 'abbr')
     doc.custom_naming_series = f"{abb}{a[0]}{a[1]}"
