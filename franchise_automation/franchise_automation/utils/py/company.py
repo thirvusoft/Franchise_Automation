@@ -18,7 +18,7 @@ def company_custom_fields():
             dict(fieldname='create_customer_supplier', label='➛ Create Customer',
                 fieldtype='Button',insert_after='franchise_automation'),
             dict(fieldname='update_item_tax_table', label='➛ Update Item Tax Table',
-                fieldtype='Button',insert_after='create_customer_supplier'),
+                fieldtype='Button',insert_after='create_customer_supplier',hidden=1),
             dict(fieldname='update_mode_of_payment', label='➛ Update Mode of Payment',
                 fieldtype='Button',insert_after='update_item_tax_table'),
             dict(fieldname='mode_of_payment', label='Mode of Payment',
@@ -71,7 +71,7 @@ def create_mode(doc):
     if doc.parent_company:
         list_doc = frappe.get_all("Mode of Payment Account",{'company':doc.name},pluck='name')
         for j in list_doc:
-            frappe.delete_doc('Mode of Payment Account',j)
+            frappe.delete_doc('Mode of Payment Account',j,ignore_permissions=True)
             frappe.db.commit()
         for i in doc.mode_of_payment:
             if i.account and i.mode_of_payment and not frappe.db.exists('Mode of Payment Account',{'parent':i.mode_of_payment,'company':doc.name,'default_account':i.account}):
@@ -127,10 +127,39 @@ def update_supplier(doc):
         new_cus.customer_name = doc.name
         new_cus.is_internal_customer = 1
         new_cus.represents_company = doc.name
+        new_cus.gstin = doc.gstin
+        new_cus.gst_category = "Registered Regular" if doc.gstin else "Unregistered"
         new_cus.append('companies',{
             'company':doc.parent_company
         })
         new_cus.save()
+        address=frappe.get_all(
+            "Address",
+            filters=[
+            ["Dynamic Link", "link_doctype", "=", 'Company'],
+            ["Dynamic Link", "link_name", "=", doc.name],
+            ["disabled", "=", 0],
+            ],
+            pluck="name",
+            limit=1,
+        )
+        contact=frappe.get_all(
+            "Contact",
+            filters=[
+            ["Dynamic Link", "link_doctype", "=", 'Company'],
+            ["Dynamic Link", "link_name", "=", doc.name],
+            ],
+            pluck="name",
+            limit=1,
+        )
+        if address:
+            new_cus.customer_primary_address = address[0]
+
+        if contact:
+            new_cus.customer_primary_contact =contact[0]
+
+        new_cus.save()
+
 
     return 1
 
@@ -158,6 +187,12 @@ def update_user(i,doc):
         user.enabled = i.enable
         user.new_password = i.get_password(fieldname="pswd")
         user.save()
+        user_permission=frappe.new_doc("User Permission")
+        user_permission.user=user.name
+        user_permission.allow="Company"
+        user_permission.for_value=doc.name
+        user_permission.apply_to_all_doctypes=1
+        user_permission.save(ignore_permissions=True)
     else:
         user = frappe.get_doc('User',{'email':i.email_id})
         user.update({
@@ -169,3 +204,10 @@ def update_user(i,doc):
         })
         user.save()
 
+def delete_item_tax_template(doc,event):
+    template = f' - {doc.abbr}'
+
+
+    for i in frappe.get_all('Item Tax',{'item_tax_template':['like',f'%{template}']},pluck='name'):
+        frappe.delete_doc('Item Tax',i)
+        frappe.db.commit()
