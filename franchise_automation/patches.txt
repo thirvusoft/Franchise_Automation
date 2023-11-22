@@ -1,0 +1,1 @@
+franchise_automation.patches.update_franchise_details_item_group
