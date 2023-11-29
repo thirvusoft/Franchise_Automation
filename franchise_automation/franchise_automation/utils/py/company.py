@@ -76,8 +76,29 @@ def create_pos(doc):
         pos.company = doc.name
         pos.__newname = doc.name
         pos.write_off_cost_center = f'Main - {doc.abbr}'
-        pos.write_off_account = f'Write Off - {doc.abbr}'
+        pos.write_off_account = doc.write_off_account
         pos.warehouse = f'Stores - {doc.abbr}'
+        pos.cost_center =  doc.cost_center
+        pos.apply_discount_on = 'Net Total'
+        pos.posa_display_items_in_stock =  1
+        pos.posa_allow_return =  1
+        pos.posa_auto_set_batch =  1
+        pos.posa_display_additional_notes =  1
+        pos.posa_display_items_in_stock =  1
+        pos.posa_allow_duplicate_customer_names =  1
+        pos.posa_search_serial_no = 1
+        pos.posa_tax_inclusive = 1
+        pos.posa_local_storage = 1
+        pos.tax_category = 'In-State'
+        pos.print_format = frappe.db.get_value(
+                "Property Setter",
+                dict(property="default_print_format", doc_type='POS Invoice'),
+                "value",
+            )
+        for i in frappe.get_list('Item Group',{'show_franchise':1},pluck='name'):
+            pos.append('item_groups',{
+                'item_group':i,
+            })
         pos.append('payments',{
             'mode_of_payment':"Cash",
             'default':1
