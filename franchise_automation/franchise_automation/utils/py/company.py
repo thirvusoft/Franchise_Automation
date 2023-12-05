@@ -23,8 +23,12 @@ def company_custom_fields():
                 fieldtype='Button',insert_after='update_item_tax_table'),
             dict(fieldname='mode_of_payment', label='Mode of Payment',
                 fieldtype='Table',insert_after='update_mode_of_payment',options='Company Mode of Payment'),
+            dict(fieldname='pos_user', label='POS User',
+                fieldtype='Check',insert_after='mode_of_payment'),
+            dict(fieldname='create_pos', label='➛ Create POS',
+                fieldtype='Button',insert_after='pos_user',depends_on='eval:doc.pos_user'),
             dict(fieldname='create_users', label='➛ Create Users',
-                fieldtype='Button',insert_after='mode_of_payment'),
+                fieldtype='Button',insert_after='create_pos'),
             dict(fieldname='user_table', label='User Table',
                 fieldtype='Table',options='Company Users',insert_after='create_user'),
             ],
@@ -63,6 +67,47 @@ def create_supp_cust(doc,event):
                     'company':doc.name
                 })
                 supp.save()
+
+@frappe.whitelist()
+def create_pos(doc):
+    doc = frappe.get_doc('Company',doc)
+    if not frappe.db.exists('POS Profile',doc.name):
+        pos = frappe.new_doc('POS Profile')
+        pos.company = doc.name
+        pos.__newname = doc.name
+        pos.write_off_cost_center = f'Main - {doc.abbr}'
+        pos.write_off_account = doc.write_off_account
+        pos.warehouse = f'Stores - {doc.abbr}'
+        pos.cost_center =  doc.cost_center
+        pos.apply_discount_on = 'Net Total'
+        pos.posa_display_items_in_stock =  1
+        pos.posa_allow_return =  1
+        pos.posa_auto_set_batch =  1
+        pos.posa_display_additional_notes =  1
+        pos.posa_display_items_in_stock =  1
+        pos.posa_allow_duplicate_customer_names =  1
+        pos.posa_search_serial_no = 1
+        pos.posa_tax_inclusive = 1
+        pos.posa_local_storage = 1
+        pos.tax_category = 'In-State'
+        pos.print_format = frappe.db.get_value(
+                "Property Setter",
+                dict(property="default_print_format", doc_type='POS Invoice'),
+                "value",
+            )
+        for i in frappe.get_list('Item Group',{'show_franchise':1},pluck='name'):
+            pos.append('item_groups',{
+                'item_group':i,
+            })
+        pos.append('payments',{
+            'mode_of_payment':"Cash",
+            'default':1
+        })
+        pos.flags.ignore_mandatory = True
+        pos.save()
+        return 1
+    else:
+        return 0
 
 @frappe.whitelist()
 def create_mode(doc):
