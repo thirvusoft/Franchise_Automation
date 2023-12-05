@@ -29,8 +29,11 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Purchase Invoice" : "franchise_automation/utils/js/purchase_invoice.js",
-"Company" : "franchise_automation/utils/js/company.js"}
+doctype_js = {
+    "Purchase Invoice" : "franchise_automation/utils/js/purchase_invoice.js",
+    "Company" : "franchise_automation/utils/js/company.js",
+    "User": "franchise_automation/utils/js/user.js",
+  }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -101,9 +104,9 @@ after_install = "franchise_automation.franchise_automation.utils.py.custom_field
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-#	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+	"Role Profile": "franchise_automation.franchise_automation.utils.py.user.role_profile_permission",
+}
 #
 # has_permission = {
 #	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -157,6 +160,9 @@ doc_events = {
 	},
   "Stock Ledger Entry": {
      "autoname":"franchise_automation.franchise_automation.utils.py.naming_series.stock_ledger_entry"
+	},
+  "User": {
+      "after_insert": "franchise_automation.franchise_automation.utils.py.user.create_user_permission"
 	}
 }
 
