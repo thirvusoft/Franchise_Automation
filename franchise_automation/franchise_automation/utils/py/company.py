@@ -190,6 +190,7 @@ def update_user(i,doc):
         user_permission=frappe.new_doc("User Permission")
         user_permission.user=user.name
         user_permission.allow="Company"
+        user_permission.is_default=1
         user_permission.for_value=doc.name
         user_permission.apply_to_all_doctypes=1
         user_permission.save(ignore_permissions=True)
