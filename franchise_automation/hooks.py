@@ -12,7 +12,7 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/franchise_automation/css/franchise_automation.css"
-# app_include_js = "/assets/franchise_automation/js/franchise_automation.js"
+app_include_js = ["/assets/franchise_automation/user.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/franchise_automation/css/franchise_automation.css"
@@ -108,9 +108,9 @@ permission_query_conditions = {
 	"Role Profile": "franchise_automation.franchise_automation.utils.py.user.role_profile_permission",
 }
 #
-# has_permission = {
-#	"Event": "frappe.desk.doctype.event.event.has_permission",
-# }
+has_permission = {
+	"Role Profile": "franchise_automation.franchise_automation.utils.py.user.has_role_profile_permission",
+}
 
 # DocType Class
 # ---------------
