@@ -110,15 +110,16 @@ frappe.ui.form.on('Company', {
 });
 frappe.ui.form.on('Company Users',{
 	'create':async function(frm,cdt,cdn){
-		if(await frm.is_dirty()){
-			await frm.save()
-		}
 		let row = locals[cdt][cdn]
+
+		if(await cur_frm.is_dirty()){
+			await cur_frm.save()
+		}
 		await frappe.call({
 			method: 'franchise_automation.franchise_automation.utils.py.company.update_user_doc',
 			freeze: true,
 			args: {
-				'doc': frm.doc.name,
+				'doc': cur_frm.doc.name,
 				'i':row.name
 			},
 			callback: function(r) {
