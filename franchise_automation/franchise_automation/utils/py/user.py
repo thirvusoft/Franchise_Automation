@@ -16,8 +16,24 @@ def role_profile_permission(user):
     if not user:
         user = frappe.session.user
     
+    if user == "Administrator":
+        return ''
+
     child_company = 1
     if frappe.db.get_list("Company", {"is_group": 1}):
         child_company = 0
     
     return f"""(`tabRole Profile`.applicable_for_child_company = {child_company})"""
+
+def has_role_profile_permission(doc, user):
+    if (user or frappe.session.user) == "Administrator":
+        return True
+    
+    child_company = 1
+    if frappe.db.get_list("Company", {"is_group": 1}):
+        child_company = 0
+    
+    if doc.applicable_for_child_company == child_company:
+        return True
+
+    return False
