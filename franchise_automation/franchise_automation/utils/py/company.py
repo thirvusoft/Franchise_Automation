@@ -243,6 +243,7 @@ def update_user(i,doc):
         user = frappe.get_doc('User',{'email':i.email_id})
         user.update({
             'username': i.user_name,
+            "enabled":1,
             'first_name': i.user_name,
             'role_profile_name': i.role_profile,
             'enabled': i.enable,
@@ -257,3 +258,16 @@ def delete_item_tax_template(doc,event):
     for i in frappe.get_all('Item Tax',{'item_tax_template':['like',f'%{template}']},pluck='name'):
         frappe.delete_doc('Item Tax',i)
         frappe.db.commit()
+
+
+
+@frappe.whitelist()
+def child_role_profile(doctype, txt, searchfield, start, page_len, filters):
+    cashiers_list = frappe.get_all("Role Profile", filters={"applicable_for_child_company":1}, fields=["name"], as_list=1)
+    return [c for c in cashiers_list]
+    # final_list=[]
+    # role_profile=frappe.get_list("Role Profile",{"applicable_for_child_company":1})
+    # for i in role_profile:
+    #     final_list.append(i.get("name"))
+
+    # return final_list

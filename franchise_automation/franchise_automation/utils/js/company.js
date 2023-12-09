@@ -9,10 +9,12 @@ frappe.ui.form.on('Company', {
 		});
 		frm.set_query("role_profile", "user_table", () => {
 			return {
-				filters: {
-					applicable_for_child_company: 1,
-				},
-			}
+				query: "franchise_automation.franchise_automation.utils.py.company.child_role_profile",
+				
+			
+			};
+			// return {
+			
 		});
     },
 	refresh:function(frm){
