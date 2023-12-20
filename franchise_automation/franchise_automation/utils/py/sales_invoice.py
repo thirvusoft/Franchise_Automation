@@ -16,7 +16,7 @@ def create_purchase_invoice(self):
 
         new_doc = make_inter_company_transaction("Sales Invoice", source_name = self.name, target_doc = None)
 
-        new_doc.save()
+        new_doc.save(ignore_permissions=True)
 
 def cancel_inter_company_pi(self):
 

@@ -18,7 +18,7 @@ def create_sales_order(self):
 
 		new_doc.delivery_date = self.schedule_date
 
-		new_doc.save()
+		new_doc.save(ignore_permissions=True)
 
 def cancel_inter_company_so(self):
 	
