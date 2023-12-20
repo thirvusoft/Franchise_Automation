@@ -243,7 +243,6 @@ def update_user(i,doc):
         user = frappe.get_doc('User',{'email':i.email_id})
         user.update({
             'username': i.user_name,
-            "enabled":1,
             'first_name': i.user_name,
             'role_profile_name': i.role_profile,
             'enabled': i.enable,

@@ -9,6 +9,7 @@ def create_user_permission(doc, event=None):
             "allow": "Company",
             "for_value": company,
             "apply_to_all_doctypes": 1,
+            'hide_descendants':1
         })
         user_perm.save()
 
