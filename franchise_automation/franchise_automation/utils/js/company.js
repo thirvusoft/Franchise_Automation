@@ -20,7 +20,7 @@ frappe.ui.form.on('Company', {
 	refresh:function(frm){
 		frm.add_custom_button(__('Update Item Tax Table'), () =>{
             frm.trigger("update_item_tax_table");
-         },__('Create'));
+         });
 	},
 	update_mode_of_payment:async function(frm){
 		if(await frm.is_dirty()){

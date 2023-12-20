@@ -56,6 +56,7 @@ def create_supp_cust(doc,event):
             new_sup.supplier_type = 'Company'
             new_sup.is_internal_supplier = 1
             new_sup.represents_company = doc.name
+            new_sup.custom_company = doc.name
             new_sup.save()
 
     elif doc.parent_company and not doc.get('__islocal'):
