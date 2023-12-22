@@ -140,9 +140,9 @@ doc_events = {
 	},
 
 	'Company':{
-		"validate": "franchise_automation.franchise_automation.utils.py.company.create_supp_cust",
+		"validate": "franchise_automation.franchise_automation.utils.py.company.validate",
 		'on_trash': "franchise_automation.franchise_automation.utils.py.company.delete_item_tax_template",
-		'after_insert': "franchise_automation.franchise_automation.utils.py.company.create_supp_cust"
+		'after_insert': "franchise_automation.franchise_automation.utils.py.company.after_insert"
 
   	},
  
