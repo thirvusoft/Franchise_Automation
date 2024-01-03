@@ -9,10 +9,48 @@ def company_customisation():
 def company_property_setter():
     pass
 
-    
+def after_insert(doc,event):
+    create_supp_cust(doc,event) 
+    update_accounts(doc)
+
+def update_accounts(doc):
+    doc.stock_received_but_not_billed = 'Stock Received But Not Billed - '+ doc.abbr
+    doc.expenses_included_in_valuation = 'Expenses Included In Valuation - '+doc.abbr
+    doc.stock_adjustment_account = 'Stock Adjustment - '+doc.abbr
+    doc.save()
+
+def validate(doc,event):
+    create_supp_cust(doc,event)
+    if doc.custom_trigger_disable:
+        disable_company(doc)
+        doc.custom_trigger_disable = 0
+
+def disable_company(doc):
+    update_user_status(doc)
+    update_warehouse(doc)
+
+def update_warehouse(doc):
+    warehouse_list = frappe.get_all('Warehouse',{'company':doc.name},pluck='name')
+    disable = 1 if doc.custom_disable else 0
+
+    for warehouse in warehouse_list:
+        frappe.get_doc('Warehouse',warehouse)
+        frappe.db.set_value('Warehouse',warehouse,'disabled',disable)
+
+
+def update_user_status(doc):
+    user_list = frappe.get_all('User Permission',{'allow':'Company','for_value':doc.name,'apply_to_all_doctypes':1},['user'],pluck='user')
+    enable = 0 if doc.custom_disable else 1
+    for us in user_list:
+        frappe.db.set_value('User',us,'enabled',enable)
+
 def company_custom_fields():
     custom_fields = {
         "Company": [
+            dict(fieldname='custom_disable', label='Disable',
+                fieldtype='Check',insert_after='company_name',depends_on='eval:doc.__islocal'),
+            dict(fieldname='custom_trigger_disable', label='Trigger Disable',
+                fieldtype='Check',hidden=1,insert_after='custom_disable'),
             dict(fieldname='franchise_automation', label='Franchise Automation',
                 fieldtype='Tab Break',insert_after='registration_details',depends_on='eval:!doc.__islocal && doc.parent_company'),
             dict(fieldname='create_customer_supplier', label='➛ Create Customer',

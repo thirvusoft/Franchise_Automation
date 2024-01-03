@@ -17,6 +17,9 @@ frappe.ui.form.on('Company', {
 			
 		});
     },
+	custom_disable:function(frm){
+		frm.set_value('custom_trigger_disable',1)
+	},
 	refresh:function(frm){
 		frm.add_custom_button(__('Update Item Tax Table'), () =>{
             frm.trigger("update_item_tax_table");
